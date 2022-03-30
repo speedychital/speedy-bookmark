@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+  "version": "1.4",
+  "name": "SpeedyTracker",
+  "browser_action": {
+    "default_popup": "index.html",
+    "default_icon": "s1.png"
+  },
+  "permissions": ["tabs"],
+  "content_scripts": [
+    {
+      "matches": ["http://*/*"],
+      "css": ["css/fontawesome.min.css", "css/solid.min.css"]
+    }
+  ],
+  "web_accessible_resources": [
+    "css/fontawesome.min.css",
+    "css/solid.min.css",
+    "webfonts/fa-solid-900.woff2"
+  ]
+}
