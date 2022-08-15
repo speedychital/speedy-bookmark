@@ -20,11 +20,15 @@ function renderBookmarks() {
 
   let lists = "";
   for (let bookmark of bookmarks) {
-    if (isValidHttpUrl(bookmark)) {
+    if (
+      typeof bookmark === "object" &&
+      bookmark !== null &&
+      isValidHttpUrl(Object.values(bookmark)[0])
+    ) {
       lists += `
         <li>
-            <a target='_blank' href='${bookmark}'>
-                ${bookmark}
+            <a target='_blank' href='${Object.values(bookmark)[0]}'>
+                ${Object.keys(bookmark)[0]}
             </a>
         </li>
         `;
@@ -63,7 +67,10 @@ function deleteBookmarks() {
 
 function saveURL() {
   chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
-    bookmarks.push(tabs[0].url);
+    const title = tabs[0].title;
+    const url = tabs[0].url;
+    bookmarks.push({ [title]: url });
+    // console.log(bookmarks);
     renderBookmarks();
     localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
   });
@@ -74,13 +81,19 @@ function downloadLists() {
     alert("No Bookmarks to download!");
     return;
   }
-  let output = JSON.stringify(bookmarks);
+  let output = bookmarks.map((bookmark) => {
+    let temp = JSON.stringify(bookmark);
+    temp = temp.replace(/[{}]/g, "");
+    return temp;
+  });
+  console.log(output);
+  output = output.join(", ");
   let fileName = "output.txt";
 
   let element = document.createElement("a");
   element.setAttribute(
     "href",
-    `data:text/plain;charset=utf-8, ${encodeURIComponent(bookmarks)}`
+    `data:text/plain;charset=utf-8, ${encodeURIComponent(output)}`
   );
   element.setAttribute("download", fileName);
   document.body.appendChild(element);

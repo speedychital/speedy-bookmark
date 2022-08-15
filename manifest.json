@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "version": "1.4",
-  "name": "SpeedyTracker",
+  "name": "speedyTracker",
   "browser_action": {
     "default_popup": "index.html",
     "default_icon": "s1.png"
